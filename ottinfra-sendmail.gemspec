@@ -6,6 +6,7 @@ require 'ottinfra/sendmail/version'
 Gem::Specification.new do |spec|
   spec.name          = "ottinfra-sendmail"
   spec.version       = OttInfra::Sendmail::VERSION
+  spec.licenses      = ['MIT']
   spec.authors       = ["Dmitry Shmelev"]
   spec.email         = ["dmitry.shmelev@onetwotrip.com"]
 
@@ -28,7 +29,7 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "bundler", "~> 1.10"
   spec.add_development_dependency "rake", "~> 10.0"
-  spec.add_development_dependency "rspec", "~>3.4.0"
+  spec.add_development_dependency 'rspec', '~> 3.4', '>= 3.4.0'
   spec.add_development_dependency "rspec_junit_formatter", "~>0.2.3"
   spec.add_development_dependency "simplecov", "~>0.11.1"
   spec.add_dependency 'sendgrid-ruby', '~> 1.1', '>= 1.1.6'
