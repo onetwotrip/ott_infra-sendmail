@@ -1,49 +1,54 @@
-require 'optimism'
 require "sendgrid-ruby"
+
+class Hash
+  def has_shape?(shape)
+    all? do |k, v|
+      Hash === v ? v.has_shape?(shape[k]) : shape[k] === v
+    end
+  end
+end
 
 module OttInfra
   class SendMail
     attr_accessor :config
 
     def initialize
-      @config = Optimism.require_env(/(SENDGRID_.*)/, split: '_')
+      @config = {
+        :sendgrid_from => ENV['SENDGRID_FROM'],
+        :sendgrid_user => ENV['SENDGRID_USER'],
+        :sendgrid_pass => ENV['SENDGRID_PASS']
+      }
     end
 
-    def send(email, opts = {})
+    def sendmail(email, opts = {})
       opts[:subject] ||= "Subject"
       opts[:message] ||= "Message"
       mail = SendGrid::Mail.new do |m|
         m.to = email
-        m.from = @config.sendgrid.from
+        m.from = @config[:sendgrid_from]
         m.subject = opts[:subject]
         m.html = opts[:message]
       end
-      opts[:attach].each do |path|
-        mail.add_attachment(path)
+      if ( opts[:attach].is_a? Array )
+        opts[:attach].each do |path|
+          mail.add_attachment(path)
+        end
       end
       SendGrid::Client.new(sendmail_options).send mail
     end
 
     def valid?
-      unless @config.sendgrid.from.class.eql? String
-        puts "SENDGRID_FROM is not defined"
-        return false
-      end
-      unless @config.sendgrid.user.class.eql? String
-        puts "SENDGRID_USER is not defined"
-        return false
-      end
-      unless @config.sendgrid.pass.class.eql? String
-        puts "SENDGRID_PASS is not defined"
-        return false
-      end
-      true
+      @config.has_shape?({
+        :sendgrid_from => String,
+        :sendgrid_user => String,
+        :sendgrid_pass => String
+      })
     end
 
     private
 
     def sendmail_options
-      { api_user: @config.sendgrid.user, api_key: @config.sendgrid.pass }
+      { api_user: @config[:sendgrid_user], api_key: @config[:sendgrid_pass] }
     end
   end
 end
