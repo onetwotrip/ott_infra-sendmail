@@ -12,29 +12,26 @@ module OttInfra
   class SendMail
     attr_accessor :config
 
-    def initialize
+    def initialize( opts = {} )
       @config = {
-        :sendgrid_from => ENV['SENDGRID_FROM'],
-        :sendgrid_user => ENV['SENDGRID_USER'],
-        :sendgrid_pass => ENV['SENDGRID_PASS']
+        :sendgrid_from => opts[:from],
+        :sendgrid_user => opts[:user],
+        :sendgrid_pass => opts[:pass]
       }
     end
 
     def sendmail(email, opts = {})
-      opts[:subject] ||= "Subject"
-      opts[:message] ||= "Message"
-      mail = SendGrid::Mail.new do |m|
-        m.to = email
-        m.from = @config[:sendgrid_from]
-        m.subject = opts[:subject]
-        m.html = opts[:message]
-      end
-      if ( opts[:attach].is_a? Array )
-        opts[:attach].each do |path|
-          mail.add_attachment(path)
+      if valid?
+        opts[:subject] ||= "Subject"
+        opts[:message] ||= "Message"
+        mail = SendGrid::Mail.new do |m|
+          m.to = email
+          m.from = @config[:sendgrid_from]
+          m.subject = opts[:subject]
+          m.html = opts[:message]
         end
+        SendGrid::Client.new(sendmail_options).send mail
       end
-      SendGrid::Client.new(sendmail_options).send mail
     end
 
     def valid?
