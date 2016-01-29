@@ -22,11 +22,10 @@ module OttInfra
 
     def sendmail(email, opts = {})
       if valid?
-        opts[:subject] ||= "Subject"
-        opts[:message] ||= "Message"
         mail = SendGrid::Mail.new do |m|
-          m.to = email
           m.from = @config[:sendgrid_from]
+          m.to = email
+          m.cc = opts[:cc]
           m.subject = opts[:subject]
           m.html = opts[:message]
         end
