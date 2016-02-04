@@ -11,16 +11,6 @@ describe OttInfra::SendMail do
     expect( sendmail.config[:sendgrid_pass] ).to match( "pass" )
     expect( sendmail.config[:sendgrid_from] ).to match( "from" )
   end
-  it ".valid? checks" do
-    sendmail = OttInfra::SendMail.new
-    expect( sendmail.valid? ).to be false
-    sendmail = OttInfra::SendMail.new ({ from: 'from' })
-    expect( sendmail.valid? ).to be false
-    sendmail = OttInfra::SendMail.new ({ from: 'from', user: 'user' })
-    expect( sendmail.valid? ).to be false
-    sendmail = OttInfra::SendMail.new ({ from: 'from', user: 'user', pass: 'pass' })
-    expect( sendmail.valid? ).to be true
-  end
   it ".sendmail_options checks" do
     expected_hash = { api_user: "user",
                       api_key: "pass" }
