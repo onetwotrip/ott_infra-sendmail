@@ -12,10 +12,10 @@ module OttInfra
       }
     end
 
-    def sendmail(email, opts = {})
+    def sendmail( opts = {} )
       mail = SendGrid::Mail.new do |m|
         m.from = @config[:sendgrid_from]
-        m.to = email
+        m.to = opts[:to]
         m.cc = opts[:cc]
         m.subject = opts[:subject]
         m.html = opts[:message]
