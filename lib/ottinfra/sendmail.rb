@@ -11,7 +11,6 @@ module OttInfra
 
     def prep_config( opts = {} )
       @config = {
-        :sendgrid_from => opts[:from],
         :sendgrid_user => opts[:user],
         :sendgrid_pass => opts[:pass]
       }
@@ -31,7 +30,7 @@ module OttInfra
     def self.sendmail( opts = {} )
       prep_config( opts )
       mail = SendGrid::Mail.new do |m|
-        m.from = @config[:sendgrid_from]
+        m.from = opts[:from]
         m.to = opts[:to]
         m.cc = opts[:cc]
         m.subject = opts[:subject]
