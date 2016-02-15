@@ -1,11 +1,10 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'ottinfra/sendmail/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "ottinfra-sendmail"
-  spec.version       = OttInfra::Sendmail::VERSION
+  spec.version       = '0.0.1'
   spec.licenses      = ['MIT']
   spec.authors       = ["Dmitry Shmelev"]
   spec.email         = ["dmitry.shmelev@onetwotrip.com"]
