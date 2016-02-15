@@ -1,16 +1,18 @@
-require "sendgrid-ruby"
+require 'sendgrid-ruby'
 
 module OttInfra
+  ##
+  # This class represents of SendGrid module
   class SendMail
     attr_accessor :config, :mails
 
-    def initialize( opts = {} )
+    def initialize(opts = {})
       create_client opts
       @mails = []
     end
 
-    def add( opts = {} )
-      @mails.push create_mail( opts )
+    def add(opts = {})
+      @mails.push create_mail(opts)
     end
 
     def sendmail
@@ -19,21 +21,20 @@ module OttInfra
       end
     end
 
-    def self.sendmail( opts = {} )
-      sendmail = self.new( opts )
+    def self.sendmail(opts = {})
+      sendmail = new(opts)
       sendmail.add opts
       sendmail.sendmail
     end
 
     private
 
-    def create_client opts
+    def create_client(opts)
       @config = opts
       @client = SendGrid::Client.new(sendmail_options)
     end
 
-
-    def create_mail( opts = {} )
+    def create_mail(opts = {})
       SendGrid::Mail.new do |m|
         m.from = opts[:from]
         m.to = opts[:to]
@@ -43,7 +44,7 @@ module OttInfra
       end
     end
 
-    def client_send mail
+    def client_send(mail)
       @client.send mail
     end
 
