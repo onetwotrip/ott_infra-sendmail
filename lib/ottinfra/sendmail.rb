@@ -5,16 +5,8 @@ module OttInfra
     attr_accessor :config, :mails
 
     def initialize( opts = {} )
-      prep_config opts
-      self.mails = []
-    end
-
-    def prep_config( opts = {} )
-      @config = {
-        :sendgrid_user => opts[:user],
-        :sendgrid_pass => opts[:pass]
-      }
-      @client = SendGrid::Client.new(sendmail_options)
+      create_client opts
+      @mails = []
     end
 
     def add( opts = {} )
@@ -28,11 +20,18 @@ module OttInfra
     end
 
     def self.sendmail( opts = {} )
-      prep_config opts
-      client_send create_mail( opts )
+      sendmail = self.new( opts )
+      sendmail.add opts
+      sendmail.sendmail
     end
 
     private
+
+    def create_client opts
+      @config = opts
+      @client = SendGrid::Client.new(sendmail_options)
+    end
+
 
     def create_mail( opts = {} )
       SendGrid::Mail.new do |m|
@@ -44,7 +43,7 @@ module OttInfra
       end
     end
 
-    def client_send( mail )
+    def client_send mail
       @client.send mail
     end
 
