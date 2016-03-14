@@ -49,7 +49,7 @@ module OttInfra
     end
 
     def sendmail_options
-      { api_user: @config[:sendgrid_user], api_key: @config[:sendgrid_pass] }
+      { api_user: @config[:user], api_key: @config[:pass] }
     end
   end
 end
